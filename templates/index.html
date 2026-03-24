@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>China Airway Resolver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="bg-shape bg-shape-a"></div>
+  <div class="bg-shape bg-shape-b"></div>
+
+  <main class="page">
+    <header class="hero">
+      <p class="kicker">Deterministic Rule Engine</p>
+      <h1>China Airway Segment Resolver</h1>
+      <p class="sub">Paste or type an airway query and get exact output in one click.</p>
+    </header>
+
+    <section class="panel">
+      <label for="queryInput">Input</label>
+      <textarea
+        id="queryInput"
+        spellcheck="false"
+        autocomplete="off"
+        autocapitalize="off"
+        placeholder="Example: B215: N373914E1011858 - N381302E1000042"
+      ></textarea>
+
+      <div class="actions">
+        <button id="resolveBtn" class="btn btn-primary" type="button">Resolve</button>
+        <button id="pasteBtn" class="btn btn-secondary" type="button">Paste</button>
+        <button id="clearBtn" class="btn btn-ghost" type="button">Clear</button>
+      </div>
+
+      <div id="status" class="status" aria-live="polite"></div>
+    </section>
+
+    <section class="panel result-panel">
+      <div class="result-header">
+        <h2>Output</h2>
+        <button id="copyBtn" class="btn btn-secondary" type="button">Copy</button>
+      </div>
+      <pre id="resultBox" class="result">Waiting for input...</pre>
+      <p id="meta" class="meta"></p>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

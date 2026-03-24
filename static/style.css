@@ -1,0 +1,252 @@
+:root {
+  --bg: #f6f8fb;
+  --surface: rgba(255, 255, 255, 0.78);
+  --surface-strong: #ffffff;
+  --text: #132238;
+  --muted: #4a5c74;
+  --line: rgba(19, 34, 56, 0.15);
+  --brand: #0057b8;
+  --brand-2: #00a6a6;
+  --ok: #0d8f57;
+  --error: #c13d3d;
+  --radius: 18px;
+  --shadow: 0 20px 55px rgba(25, 45, 73, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 7% 8%, #dcefff 0%, transparent 42%),
+    radial-gradient(circle at 85% 17%, #d8fff2 0%, transparent 37%),
+    linear-gradient(160deg, #f8fbff 0%, #f4f7fc 58%, #edf6ff 100%);
+  padding: 24px;
+  overflow-x: hidden;
+}
+
+.bg-shape {
+  position: fixed;
+  z-index: -1;
+  border-radius: 999px;
+  filter: blur(24px);
+  opacity: 0.45;
+  animation: drift 12s ease-in-out infinite alternate;
+}
+
+.bg-shape-a {
+  width: 300px;
+  height: 300px;
+  left: -90px;
+  top: -60px;
+  background: #b7d8ff;
+}
+
+.bg-shape-b {
+  width: 330px;
+  height: 330px;
+  right: -120px;
+  bottom: -80px;
+  background: #b8fff0;
+  animation-delay: 1.8s;
+}
+
+@keyframes drift {
+  from {
+    transform: translateY(-6px) scale(1);
+  }
+  to {
+    transform: translateY(16px) scale(1.07);
+  }
+}
+
+.page {
+  max-width: 920px;
+  margin: 0 auto;
+  display: grid;
+  gap: 18px;
+}
+
+.hero {
+  padding: 14px 8px;
+  animation: fade-up 500ms ease;
+}
+
+.kicker {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #48678e;
+}
+
+h1 {
+  margin: 8px 0 8px;
+  font-size: clamp(1.85rem, 2.4vw, 2.55rem);
+  line-height: 1.1;
+}
+
+.sub {
+  margin: 0;
+  color: var(--muted);
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+  padding: 16px;
+  animation: fade-up 650ms ease;
+}
+
+label {
+  display: block;
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 118px;
+  resize: vertical;
+  border: 1px solid var(--line);
+  background: var(--surface-strong);
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 0.95rem;
+  color: #132238;
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+textarea:focus {
+  border-color: rgba(0, 87, 184, 0.52);
+  box-shadow: 0 0 0 4px rgba(0, 87, 184, 0.12);
+}
+
+.actions {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 160ms ease, opacity 120ms ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: linear-gradient(115deg, var(--brand), #0b6ed8 50%, #2475d9 100%);
+  color: white;
+  box-shadow: 0 12px 28px rgba(0, 87, 184, 0.32);
+}
+
+.btn-secondary {
+  background: linear-gradient(115deg, #e5f4ff, #dcfff7);
+  color: #10466e;
+  border: 1px solid rgba(16, 70, 110, 0.18);
+}
+
+.btn-ghost {
+  background: #fff;
+  color: #344d69;
+  border: 1px solid var(--line);
+}
+
+.btn[disabled] {
+  opacity: 0.64;
+  cursor: not-allowed;
+}
+
+.status {
+  margin-top: 10px;
+  min-height: 22px;
+  color: var(--muted);
+}
+
+.status.ok {
+  color: var(--ok);
+}
+
+.status.error {
+  color: var(--error);
+}
+
+.result-panel {
+  padding-top: 14px;
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.result {
+  margin: 12px 0 0;
+  padding: 14px;
+  border-radius: 14px;
+  background: #0f1f33;
+  color: #f4f8ff;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 1.02rem;
+  min-height: 56px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.meta {
+  margin: 10px 0 0;
+  color: #4a5c74;
+  font-size: 0.88rem;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    padding: 14px;
+  }
+
+  .panel {
+    padding: 12px;
+  }
+
+  .btn {
+    width: calc(50% - 5px);
+  }
+}
