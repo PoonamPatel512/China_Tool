@@ -252,5 +252,75 @@ def nz_convert():
     )
 
 
+import re
+
+def convert_aus_notam(text: str) -> str:
+    lines = text.splitlines()
+
+    # match lines like "MON-FRI 2145-0915" or "    SAT 2245-0550"
+    schedule_pattern = re.compile(r"^\s*([A-Z\- ]+?)\s+(\d{4})-(\d{4})\s*$", re.IGNORECASE)
+    schedule_items = []
+
+    # import from web_app using exec so we don't duplicate
+    from web_app import _parse_day_tokens, _compress_day_sequence
+    
+    for line in lines:
+        match = schedule_pattern.match(line)
+        if not match:
+            continue
+        day_text = match.group(1).strip().upper()
+        start_local = match.group(2)
+        end_local = match.group(3)
+        day_indices = _parse_day_tokens(day_text)
+        if not day_indices:
+            continue
+        
+        # determine if overnight
+        start_mins = int(start_local[:2]) * 60 + int(start_local[2:])
+        end_mins = int(end_local[:2]) * 60 + int(end_local[2:])
+        is_overnight = start_mins > end_mins
+
+        shift = -1 if is_overnight else 0
+        new_days = {(idx + shift) % 7 for idx in day_indices}
+        
+        schedule_items.append((start_local, end_local, new_days))
+        
+    if not schedule_items:
+        return text
+        
+    grouped = {}
+    for start_time, end_time, days in schedule_items:
+        key = (start_time, end_time)
+        grouped.setdefault(key, set()).update(days)
+        
+    output_lines = []
+    for (start_time, end_time), days in sorted(grouped.items(), key=lambda item: min(item[1])):
+        day_text = _compress_day_sequence(sorted(days))
+        output_lines.append(f"{day_text} {start_time}-{end_time},")
+        
+    return "\n".join(output_lines)
+
+
+@app.post("/api/aus-convert")
+def aus_convert():
+    payload = request.get_json(silent=True) or {}
+    text = str(payload.get("text", "")).strip()
+    if not text:
+        return jsonify({"ok": False, "error": "Input is required"}), 400
+
+    started = time.perf_counter()
+    converted = convert_aus_notam(text)
+    elapsed_ms = round((time.perf_counter() - started) * 1000.0, 2)
+
+    return jsonify(
+        {
+            "ok": True,
+            "result": converted,
+            "latencyMs": elapsed_ms,
+            "mode": "aus-day-logic",
+        }
+    )
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=False)

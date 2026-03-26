@@ -8,6 +8,7 @@ const statusEl = document.getElementById("status");
 const metaEl = document.getElementById("meta");
 const chinaTab = document.getElementById("chinaTab");
 const nzTab = document.getElementById("nzTab");
+const ausTab = document.getElementById("ausTab");
 const inputLabel = document.getElementById("inputLabel");
 
 let activeMode = "china";
@@ -15,16 +16,31 @@ let activeMode = "china";
 function applyMode(mode) {
   activeMode = mode;
   const isChina = mode === "china";
+  const isNz = mode === "nz";
+  const isAus = mode === "aus";
+  
   chinaTab.classList.toggle("active", isChina);
-  nzTab.classList.toggle("active", !isChina);
+  nzTab.classList.toggle("active", isNz);
+  ausTab.classList.toggle("active", isAus);
+  
   resolveBtn.textContent = isChina ? "Resolve" : "Convert";
   inputLabel.textContent = isChina ? "Input" : "NOTAM Input";
-  queryInput.placeholder = isChina
-    ? "Example: B215: N373914E1011858 - N381302E1000042"
-    : "Paste NZ NOTAM text with lines like: 0600-2035 MON-FRI";
+  
+  if (isChina) {
+      queryInput.placeholder = "Example: B215: N373914E1011858 - N381302E1000042";
+  } else if (isNz) {
+      queryInput.placeholder = "Paste NZ NOTAM text with lines like: 0600-2035 MON-FRI";
+  } else {
+      queryInput.placeholder = "Paste Australia NOTAM text with lines like: SUN-FRI 1945-1345";
+  }
+  
   resultBox.textContent = "Waiting for input...";
   metaEl.textContent = "";
-  setStatus(isChina ? "China airway mode selected." : "NZ time converter mode selected.", "");
+  
+  let modeMsg = "China airway mode selected.";
+  if (isNz) modeMsg = "NZ time converter mode selected.";
+  if (isAus) modeMsg = "Australia time converter mode selected.";
+  setStatus(modeMsg, "");
 }
 
 function setStatus(message, mode = "") {
@@ -52,11 +68,17 @@ async function resolveQuery() {
   }
 
   setBusy(true);
-  setStatus(activeMode === "china" ? "Computing from live PDFs..." : "Converting NZDT to UTC...", "");
+  let loadingMsg = "Computing from live PDFs...";
+  if (activeMode === "nz") loadingMsg = "Converting NZDT to UTC...";
+  if (activeMode === "aus") loadingMsg = "Applying Australia day rules...";
+  setStatus(loadingMsg, "");
   metaEl.textContent = "";
 
   try {
-    const endpoint = activeMode === "china" ? "/api/resolve" : "/api/nz-convert";
+    let endpoint = "/api/resolve";
+    if (activeMode === "nz") endpoint = "/api/nz-convert";
+    if (activeMode === "aus") endpoint = "/api/aus-convert";
+    
     const body = activeMode === "china" ? { query } : { text: query };
 
     const response = await fetch(endpoint, {
@@ -79,8 +101,10 @@ async function resolveQuery() {
     if (activeMode === "china") {
       const files = Array.isArray(payload.pdfsUsed) ? payload.pdfsUsed.length : 0;
       metaEl.textContent = `Fresh compute: yes | PDFs used: ${files} | Latency: ${payload.latencyMs} ms`;
-    } else {
+    } else if (activeMode === "nz") {
       metaEl.textContent = `Mode: NZDT -> UTC | Latency: ${payload.latencyMs} ms`;
+    } else {
+      metaEl.textContent = `Mode: Australia Day Shift | Latency: ${payload.latencyMs} ms`;
     }
   } catch (error) {
     resultBox.textContent = "ERROR";
@@ -122,6 +146,7 @@ async function copyResult() {
 resolveBtn.addEventListener("click", resolveQuery);
 chinaTab.addEventListener("click", () => applyMode("china"));
 nzTab.addEventListener("click", () => applyMode("nz"));
+ausTab.addEventListener("click", () => applyMode("aus"));
 pasteBtn.addEventListener("click", pasteFromClipboard);
 clearBtn.addEventListener("click", () => {
   queryInput.value = "";
