@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>China Airway Resolver</title>
+  <title>Aviation Operations Tools</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -16,12 +16,17 @@
   <main class="page">
     <header class="hero">
       <p class="kicker">Deterministic Rule Engine</p>
-      <h1>China Airway Segment Resolver</h1>
-      <p class="sub">Paste or type an airway query and get exact output in one click.</p>
+      <h1>Aviation Operations Tools</h1>
+      <p class="sub">Select a tool and run exactly one workflow at a time.</p>
     </header>
 
+    <section class="tool-tabs" aria-label="Tool selection">
+      <button id="chinaTab" class="tab-btn active" type="button">China Airway Tool</button>
+      <button id="nzTab" class="tab-btn" type="button">New Zealand Time Converter</button>
+    </section>
+
     <section class="panel">
-      <label for="queryInput">Input</label>
+      <label id="inputLabel" for="queryInput">Input</label>
       <textarea
         id="queryInput"
         spellcheck="false"

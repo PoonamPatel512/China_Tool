@@ -72,6 +72,30 @@ body {
   gap: 18px;
 }
 
+.tool-tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  animation: fade-up 600ms ease;
+}
+
+.tab-btn {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.9);
+  color: #264567;
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  border-color: rgba(0, 87, 184, 0.4);
+  color: #0b407a;
+  background: linear-gradient(115deg, #e6f3ff, #defdf2);
+  box-shadow: 0 8px 20px rgba(0, 87, 184, 0.14);
+}
+
 .hero {
   padding: 14px 8px;
   animation: fade-up 500ms ease;
